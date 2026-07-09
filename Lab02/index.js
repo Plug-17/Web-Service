@@ -1,7 +1,8 @@
-import express from "express"
+import express, { json } from "express"
 const app = express()
 const port = 3000
 
+const students = [{"id":"220","name":"plug"}]
 app.get('/',(req,res)=>{
     console.log('GET Request!!')
     console.log(req.rawHeaders[1])
@@ -10,6 +11,10 @@ app.get('/',(req,res)=>{
         <h1> LAB02 </h1>
         <p> ได้รับการร้องขอจาก IP ${req.ip}</p>
         `);
+})
+
+app.get("/students",(req,res)=>{
+    res.json(students)
 })
 
 
@@ -22,6 +27,8 @@ app.get('/ip',(req,res)=>{
         <p> Request from IP:${req.ip}</p>
         `);
 })
+
+
 
 
 
@@ -48,5 +55,3 @@ app.get('/readparam',(req,res)=>{
 app.listen(port,()=>{
     console.log(`Sever running on port ${port}`)
 })
-
-
