@@ -1,0 +1,20 @@
+{
+  "name": "plug",
+  "version": "2.1.0",
+  "description": "haha",
+  "homepage": "https://github.com/Plug-17/Web-Service#readme",
+  "bugs": {
+    "url": "https://github.com/Plug-17/Web-Service/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Plug-17/Web-Service.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
