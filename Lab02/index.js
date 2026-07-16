@@ -44,14 +44,6 @@ app.get('/readparam',(req,res)=>{
 })
 
 
-
-
-
-
-
-
-
-
 app.listen(port,()=>{
     console.log(`Sever running on port ${port}`)
 })
