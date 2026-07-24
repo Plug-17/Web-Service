@@ -10,6 +10,7 @@ const database = new Pool({
 })
 
 
+
 app.get("/",(req,res)=>{
      console.log(`GET / is requested`)
     res.status(200).json({
