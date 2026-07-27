@@ -3,6 +3,7 @@ import express from "express"
 import database from "./services/database.js"
 import dotenv from 'dotenv'
 import bodyParser  from "body-parser"
+import { message } from "statuses"
 
 dotenv.config()
 const app  = express()
@@ -77,6 +78,20 @@ app.get("/product", async(req,res)=>{
     }
 })
 
+app.post("/products",(req,res)=>{
+    console.log(`GET it requested`)
+    const bodyData = req.body
+    try{
+        if(!bodyData.pdId || !bodyData.pdName){
+            return res.status(422).json({
+                message:`ERROR pdid or pdname is requred`
+            })
+        }
+    } catch(err){
+        message:err.message
+    }
+})
+
 
 app.get("/students", async(req,res)=>{
      console.log(`GET it requested`)
@@ -92,6 +107,8 @@ app.get("/students", async(req,res)=>{
         
     }
 })
+
+
 
 
 app.listen(port,()=>{
