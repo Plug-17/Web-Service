@@ -2,7 +2,7 @@ import express from "express"
 
 import database from "./services/database.js"
 import dotenv from 'dotenv'
-import bodyParser  from "body-parser"
+import bodyParser, { json, text }  from "body-parser"
 import { message } from "statuses"
 
 dotenv.config()
@@ -22,6 +22,38 @@ const {Pool} = pkg */
 }) */
 
 app.use(bodyParser.json())
+
+app.post("/product",(req,res)=>{
+    console.log(`POST products is requested`)
+    
+    const bodyData = req.body
+
+    try{
+        const sqlsty  = query.json({
+                 text:`INSERT INTO products ("pdId","pdName","pdPrice","pdTypeId","brandId") VALUES ($1,$2,$3,$4,$5)`,
+        values : [
+            req.body = pdId,
+             req.body.pdName,
+                req.body.pdPrice,
+                req.body.pdTypeId,
+                req.body.brandId
+        ]
+
+       
+        })
+         const datetime = new Date()
+         bodyData.createtime = datetime
+         bodyData.message = "ok"
+         res.status(201).json(bodyData)
+       
+    } catch(err){
+              res.status(500).json({
+            message:err.message
+        })
+    }
+})
+
+/* app.use(bodyParser.json())
 app.post("/product",(req,res)=>{
      console.log(`GET it requested`)
      const bodyData = req.body
@@ -50,7 +82,7 @@ app.post("/product",(req,res)=>{
 
      res.status(201).json(bodyData)
 })
-
+ */
 
 
 
@@ -79,6 +111,35 @@ app.get("/product", async(req,res)=>{
 })
 
 app.post("/products",(req,res)=>{
+
+    console.log(`POST products is requested`)
+    const bodyData = req.body
+
+    try{
+        if(!body.pdId || !body.pdName) {
+            res.status(422).json({
+                message:`error in pdid or pdname`
+            })
+        }
+
+       const chkrow = database.query({
+            text:`SELECT * FROM  products WHERE "pdid" = $1`,
+            values:[bodyData.pdId]
+       })
+
+       if(chkrow.rowCount != 0) {
+            return res.status(422).json({
+                 message:`ERROR pdid ${bodyData.pdId} ids exits`
+            })
+       }
+
+
+    } catch(err){
+        message:err.message
+    }
+})
+
+/* app.post("/products",async(req,res)=>{
     console.log(`GET it requested`)
     const bodyData = req.body
     try{
@@ -87,10 +148,20 @@ app.post("/products",(req,res)=>{
                 message:`ERROR pdid or pdname is requred`
             })
         }
+
+        const chkrow = await database.query({
+            text:`SELECT * FROM  products WHERE "pdid" = $1`,
+            values:[bodyData.pdId]
+        })
+        if(chkrow.rowCount != 0) {
+            return res.status(422).json({
+                message:`ERROR pdid ${bodyData.pdId} ids exits`
+            })
+        }
     } catch(err){
         message:err.message
     }
-})
+}) */
 
 
 app.get("/students", async(req,res)=>{
