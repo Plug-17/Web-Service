@@ -29,6 +29,20 @@ app.post("/product",(req,res)=>{
     const bodyData = req.body
 
     try{
+        if(!bodyData.pdId || !bodyData.pdName) {
+            res.status(409).json({
+                message:`ERROR pdId and pdName is requried`
+            })
+        }
+
+        const chkRow = await query({
+              text:`SELECT * FROM products WHERE "pdId" = $1`,
+            values:[bodyData.pdId]
+        })
+
+        if(chkRow.rowCount != 0) {
+             res.status(409).json({message:`ERROR pdId ${bodyData.pdId} is exists`})
+        }
         const sqlsty  = query.json({
                  text:`INSERT INTO products ("pdId","pdName","pdPrice","pdTypeId","brandId") VALUES ($1,$2,$3,$4,$5)`,
         values : [
