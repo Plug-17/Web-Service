@@ -1,5 +1,28 @@
 import database from "../services/database.js";
 
+
+export async function deleteProduct(req,res) {
+    console.log(`DELETE  it requested`)
+         
+         try{
+            const bodyData  = req.body
+            const result = await database.query({
+                text:`DELETE FROM "products" WHERE "pdId" = $1`,
+                values:[req.params.id]
+            })
+
+            if(result.rowCount == 0) {
+                return res.status(404).json({message:`ERROR id ${req.params.id} not found`})
+            }
+           
+            return res.status(204).end()
+         }catch(err){
+            return res.status(500).json({
+                message:err.message
+            })
+            
+        }
+}
 export async function putProduct(req,res) {
     console.log(`Put it requested`)
          
@@ -110,10 +133,10 @@ export async function postProduct(req,res) {
         if(chkRow.rowCount != 0){
             res.status(409).json({message:`ERROR pdId ${bodyData.pdId} is exists`})
         }
-         const sqlsty  = query.json({
+         const sqlsty  = await database.query({
                  text:`INSERT INTO products ("pdId","pdName","pdPrice","pdTypeId","brandId") VALUES ($1,$2,$3,$4,$5)`,
         values : [
-            req.body = pdId,
+            req.body.pdId,
              req.body.pdName,
                 req.body.pdPrice,
                 req.body.pdTypeId,
