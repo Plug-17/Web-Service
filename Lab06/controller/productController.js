@@ -1,6 +1,40 @@
 import database from "../services/database.js";
 
 
+export async function getProductByBrandId(req,res) {
+    console.log(`GET it brand requested`)
+         
+         try{
+           
+            const result = await database.query({
+                text:`SELECT p.*,
+(
+SELECT row_to_json(brand_obj) FROM (
+		SELECT "brandId","brandName" FROM brands
+		WHERE "brandId" = p."brandId"
+) brand_obj
+) As brand,
+
+(
+SELECT row_to_json(pdt_obj) FROM (
+		SELECT "pdTypeId","pdTypeName" FROM  "pdTypes"
+		WHERE "pdTypeId" = p."pdTypeId"
+) pdt_obj
+) AS pdt
+
+FROM products p
+WHERE p."brandId" ILIKE $1`,
+values:[req.params.id]
+            })
+            return res.status(200).json(result.rows)
+         }catch(err){
+            return res.status(500).json({
+                message:err.message
+            })
+            
+        }
+}
+
 export async function deleteProduct(req,res) {
     console.log(`DELETE  it requested`)
          
