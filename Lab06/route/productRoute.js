@@ -10,5 +10,6 @@ route.get('/product/:id',productC.getProductById)
 route.put('/product/:id',productC.putProduct)
 route.delete('/product/:id',productC.deleteProduct)
 route.get('/product/brands/:id',productC.getProductByBrandId)
+route.patch('/product/:id',productC.patchProduct)
 export default route
 
