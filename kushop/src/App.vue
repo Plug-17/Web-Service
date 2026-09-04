@@ -1,11 +1,15 @@
-<script setup></script>
+
 
 <template>
- <h1>KUSHOP</h1>
- <router-link to="/product"></router-link>
- <router-link to="/login"></router-link>
+<MainMenu></MainMenu>
 
  <router-view></router-view>
 </template>
+<script setup>
+import MainMenu from './conponents/MainMenu.vue';
 
-<style scoped></style>
+</script>
+
+<style scoped>
+
+</style>
