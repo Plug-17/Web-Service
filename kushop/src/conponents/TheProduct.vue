@@ -1,8 +1,12 @@
 <template>
-  <h1>Product</h1>
+  <div class="mt-5 mx-3">
+    <PageProduct></PageProduct>
+  </div>
 </template>
 
 <script setup>
+import PageProduct from './PageProduct.vue';
+
 
 </script>
 
