@@ -1,7 +1,45 @@
 import database from "../services/database.js";
 
 
+export async function getAllProduct(req, res) {
+    console.log(`GET all product requested`)
 
+    try {
+        const result = await database.query({
+            text: `
+                SELECT p.*,
+
+                (
+                    SELECT row_to_json(brand_obj)
+                    FROM (
+                        SELECT "brandId", "brandName"
+                        FROM brands
+                        WHERE "brandId" = p."brandId"
+                    ) brand_obj
+                ) AS brand,
+
+                (
+                    SELECT row_to_json(pdt_obj)
+                    FROM (
+                        SELECT "pdTypeId", "pdTypeName"
+                        FROM "pdTypes"
+                        WHERE "pdTypeId" = p."pdTypeId"
+                    ) pdt_obj
+                ) AS pdt
+
+                FROM products p
+                ORDER BY "pdId"
+            `
+        })
+
+        return res.status(200).json(result.rows)
+
+    } catch (err) {
+        return res.status(500).json({
+            message: err.message
+        })
+    }
+}
 export async function patchProduct(req,res) {
     console.log(`Patch it requested`)
          
@@ -31,31 +69,50 @@ export async function patchProduct(req,res) {
 }
 
 
-export async function getProductByBrandId(req,res) {
+export async function getProductByBrandId(req, res) {
     console.log(`GET it brand requested`)
-         
-         try{
-           
-            const result = await database.query({
-                text:`SELECT p.*,
-(
-SELECT row_to_json(pdt_obj) FROM (
-		SELECT "pdTypeId","pdTypeName" FROM  "pdTypes"
-		WHERE "pdTypeId" = p."pdTypeId"
-) pdt_obj
-) AS pdt
 
-FROM products p
-WHERE p."brandId" ILIKE $1`,
-values:[req.params.id]
-            })
-            return res.status(200).json(result.rows)
-         }catch(err){
-            return res.status(500).json({
-                message:err.message
-            })
-            
-        }
+    try {
+
+        const result = await database.query({
+            text: `
+                SELECT p.*,
+
+                (
+                    SELECT row_to_json(brand_obj)
+                    FROM (
+                        SELECT "brandId", "brandName"
+                        FROM brands
+                        WHERE "brandId" = p."brandId"
+                    ) brand_obj
+                ) AS brand,
+
+                (
+                    SELECT row_to_json(pdt_obj)
+                    FROM (
+                        SELECT "pdTypeId", "pdTypeName"
+                        FROM "pdTypes"
+                        WHERE "pdTypeId" = p."pdTypeId"
+                    ) pdt_obj
+                ) AS pdt
+
+                FROM products p
+
+                WHERE p."brandId" ILIKE $1
+            `,
+
+            values: [req.params.id]
+        })
+
+        return res.status(200).json(result.rows)
+
+    } catch (err) {
+
+        return res.status(500).json({
+            message: err.message
+        })
+
+    }
 }
 
 export async function deleteProduct(req,res) {
@@ -142,7 +199,56 @@ values:[req.params.id]
 }
 
 
-export async function getAllProduct(req,res) {
+export async function getSearchProduct(req, res) {
+    console.log(`GET it requested id=${req.params.id}`)
+
+    try {
+
+        const result = await database.query({
+            text: `
+                SELECT p.*,
+
+                (
+                    SELECT row_to_json(brand_obj)
+                    FROM (
+                        SELECT "brandId", "brandName"
+                        FROM brands
+                        WHERE "brandId" = p."brandId"
+                    ) brand_obj
+                ) AS brand,
+
+                (
+                    SELECT row_to_json(pdt_obj)
+                    FROM (
+                        SELECT "pdTypeId", "pdTypeName"
+                        FROM "pdTypes"
+                        WHERE "pdTypeId" = p."pdTypeId"
+                    ) pdt_obj
+                ) AS pdt
+
+                FROM products p
+
+                WHERE p."pdId" = $1
+                   OR p."pdName" ILIKE $1
+                   OR p."pdRemark" ILIKE $1
+            `,
+
+            values: [`${req.params.id}%`]
+        })
+
+        return res.status(200).json(result.rows)
+
+    } catch (err) {
+
+        return res.status(500).json({
+            message: err.message
+        })
+
+    }
+}
+
+
+export async function getThreeProduct(req,res) {
     console.log(`GET it requested`)
          
          try{
@@ -161,7 +267,8 @@ SELECT row_to_json(pdt_obj) FROM (
 ) pdt_obj
 ) AS pdt
 
-FROM products p` 
+FROM products p ORDER BY "pdId"
+OFFSET 0 LIMIT 3` 
             const result = await database.query(sqlsty)
             return res.status(200).json(result.rows)
          }catch(err){
@@ -188,7 +295,7 @@ export async function postProduct(req,res) {
         })
 
         if(chkRow.rowCount != 0){
-            res.status(409).json({message:`ERROR pdId ${bodyData.pdId} is exists`})
+          return  res.status(409).json({message:`ERROR pdId ${bodyData.pdId} is exists`})
         }
          const sqlsty  = await database.query({
                  text:`INSERT INTO products ("pdId","pdName","pdPrice","pdTypeId","brandId") VALUES ($1,$2,$3,$4,$5)`,

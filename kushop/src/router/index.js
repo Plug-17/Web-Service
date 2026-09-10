@@ -1,7 +1,13 @@
 import { createRouter,createWebHistory } from "vue-router"
 import TheProduct from "@/conponents/TheProduct.vue"
 import TheLogin from "@/conponents/TheLogin.vue"
+import TheHome from "@/conponents/TheHome.vue"
 const routes = [
+    {
+        path:'/',
+        name:'home',
+        component:TheHome
+    },
     {
         path:'/product',
         name:'product',

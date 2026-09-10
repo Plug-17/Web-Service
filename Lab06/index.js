@@ -1,4 +1,5 @@
 import express from "express"
+import cors from "cors"
 import database from "./services/database.js"
 import dotenv from "dotenv"
 import bodyParser from "body-parser"
@@ -10,7 +11,10 @@ const app = express()
 
 const port = process.env.PORT
 
+app.use(cors())
+
 app.use(bodyParser.json())
+app.use("/img_pd",express.static("img_pd"))
 
 app.use(productRoute)
 

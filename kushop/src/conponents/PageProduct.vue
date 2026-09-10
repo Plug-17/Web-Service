@@ -1,62 +1,94 @@
+
 <template>
+
+    <!-- vue.js form ถ้าไม่กำหนด @submit.prevent จะทำการเปลี่ยนหน้าเมื่อ submit -->
+    <form @submit.prevent="searchProduct">
+        <div class="row">
+            <div class="h1 col-md-6 col-sm-12 text-danger">
+                ผลิตภัณฑ์ของเรา
+            </div>
+
+            <div class="col-md-4 col-sm-6">
+                <input
+                    type="text"
+                    class="form-control"
+                    v-model="stext"
+                >
+            </div>
+
+            <div class="col">
+                <button
+                    class="btn btn-primary"
+                    type="submit"
+                >
+                    ค้นหา
+                </button>
+            </div>
+        </div>
+    </form>
+
     <div class="row">
-        <div v-for="(pd,pdId) in products" :key="pdId" class="col-lg-4 col-md-6 col-sm-12">
-            <div class="card" style="width: 18rem;">
-  <img src="..." class="card-img-top" alt="...">
-  <div class="card-body">
-    <h5 class="card-title">{{ pd.pdName }}</h5>
-    <p class="card-text">{{ pd.brand.brandName}} - {{ pd.pdPrice }}</p>
-    <a href="#" class="btn btn-primary">Go somewhere</a>
-  </div>
-</div>
+        <div
+            v-for="pd in products"
+            :key="pd.pdId"
+            class="col-lg-4 col-md-6 col-sm-12"
+        >
+            <div
+                class="card mt-3"
+                style="width: 18rem; background-color: #EEEEEE;"
+            >
+          <img
+    :src="`http://localhost:3000/img_pd/${pd.pdId}.jpg`"
+    class="card-img-top"
+    alt=""
+>
+
+                <div class="card-body">
+                    <h5 class="card-title">
+                        {{ pd.pdName }}
+                    </h5>
+
+                    <p class="card-text">
+                        {{ pd.brand?.brandName || "ไม่ระบุยี่ห้อ" }}
+                        -
+                        {{ pd.pdPrice }}
+                    </p>
+
+                    <a href="#" class="btn btn-primary">
+                        Go somewhere
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
-    </div>
-    
-   
+
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue'
+import axios from 'axios'
 
-const products = ref(
-    [
-    {
-        "pdId": "002",
-        "pdName": "Product2",
-        "pdPrice": 2000,
-        "pdRemark": null,
-        "pdTypeId": "T01",
-        "brandId": "B03",
-        "brand": {
-            "brandId": "B03",
-            "brandName": "Brand C"
-        },
-        "pdt": {
-            "pdTypeId": "T01",
-            "pdTypeName": "สินค้าชนิดที่1"
-        }
-    },
-    {
-        "pdId": "003",
-        "pdName": "Product3",
-        "pdPrice": 3000,
-        "pdRemark": null,
-        "pdTypeId": "T01",
-        "brandId": "B03",
-        "brand": {
-            "brandId": "B03",
-            "brandName": "Brand C"
-        },
-        "pdt": {
-            "pdTypeId": "T01",
-            "pdTypeName": "สินค้าชนิดที่1"
-        }
-    }
-]
+const products = ref([])
+const stext = ref("")
 
-)
+onMounted(async () => {
+    await axios.get(`http://localhost:3000/product`)
+        .then(res => {
+            products.value = res.data
+        })
+        .catch(err => console.log(err.message))
+})
+
+const searchProduct = async () => {
+    await axios.get(`http://localhost:3000/product/search/${stext.value}`)
+        .then(res => {
+            products.value = res.data
+        })
+        .catch(err => console.log(err.message))
+}
 </script>
 
 <style lang="scss" scoped>
 
 </style>
+

@@ -12,7 +12,7 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <router-link to="/"   ><div class="nav-link">Home</div></router-link>
+            <router-link to="/"><div class="nav-link">Home</div></router-link>
           </li>
           <li class="nav-item">
            <router-link to="/product" ><div class="nav-link">Product</div></router-link>

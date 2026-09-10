@@ -1,12 +1,17 @@
 import express from "express"
-
+import cors from "cors"
 import database from "./services/database.js"
 import dotenv from 'dotenv'
 import bodyParser, { json, text }  from "body-parser"
-import { message } from "statuses"
+import statuses from "statuses"
+
+const { message } = statuses
 
 dotenv.config()
 const app  = express()
+
+
+app.use(cors())
 
 const port = process.env.PORT
 
@@ -23,7 +28,7 @@ const {Pool} = pkg */
 
 app.use(bodyParser.json())
 
-app.post("/product",(req,res)=>{
+app.post("/product",async(req,res)=>{
     console.log(`POST products is requested`)
     
     const bodyData = req.body
