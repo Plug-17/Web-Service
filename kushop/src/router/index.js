@@ -2,6 +2,8 @@ import { createRouter,createWebHistory } from "vue-router"
 import TheProduct from "@/conponents/TheProduct.vue"
 import TheLogin from "@/conponents/TheLogin.vue"
 import TheHome from "@/conponents/TheHome.vue"
+import TheRegister from "@/conponents/TheRegister.vue"
+import PageMember from "@/conponents/PageMember.vue"
 const routes = [
     {
         path:'/',
@@ -18,6 +20,18 @@ const routes = [
         name:'Login',
         component:TheLogin
     },
+    {
+        
+        path:'/register',
+        name:'Register',
+        component:TheRegister
+    },
+    {
+        path:'/pagemember',
+        name:'PageMember',
+        component:PageMember
+    },
+
 ]
 const router = createRouter({
     history:createWebHistory(import.meta.env.BASE_URL),routes
