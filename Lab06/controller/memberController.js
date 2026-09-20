@@ -2,6 +2,28 @@ import database from '../services/database.js'
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 
+
+export async function logoutMember(req,res) {
+    console.log("GET /logoutmember is requested")
+
+    try{
+        res.clearCookie('token',{
+            httpOnly:true,
+            secure:true,
+            sameSite:'strict'
+        })
+
+        res.json({message:"login fail",login:false})
+
+
+    } catch(err) {
+        return res.json({
+            message:err.message
+        })
+    }
+}
+
+
 export async function getMember(req,res) {
     console.log('GET/getMember')
 
@@ -103,12 +125,13 @@ export async function loginMember(req,res) {
             const secret = process.env.SECRET_KEY
             const token = jwt.sign(theuser,secret,{expiresIn:'1h'})
 
-            res.cookie('token', token, {
-    maxAge: 3600000,
-    httpOnly: true,
-    secure: false,
-    sameSite: 'lax'
-})
+            res.cookie('token',token,{
+                maxAge:3600000, //3,600,000 ms --> 60 minute -->1hr,
+                httpOnly: true, // ป้องกันการเข้าถึง Token ผ่าน JavaScript (ป้องกัน XSS)
+                secure: true,
+                sameSite:'strict' // ป้องกันส่ง Cookie ข้าม Do
+
+            })
     res.json({
         message: "Login Success",
         login: true

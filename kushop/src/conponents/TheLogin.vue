@@ -2,7 +2,7 @@
   <div class="container">
         <div class=" row mt-5">
         <div class="col-sm-12 col-md-6 col-lg-6 mb-5">
-            <img src="../assets/kushop/src/access/2025_Nitro_Default_3840x2400.jpg" alt="" width="80%">
+            <img src="../access/LogoSRC.png" alt="" width="80%">
         </div>
         <div class="col-sm-12 col-md-6 col-lg-6 mb3">
             <!-- เมื่อสั่ง Submit ให้เรียก Function handleSubmit -->
@@ -49,34 +49,59 @@
 </template>
 
 <script setup>
- import { ref } from 'vue'; // import function ref มาจาก v
-    import axios from 'axios';
-    import {  useRouter } from 'vue-router';
-    axios.defaults.withCredentials = true
+import { onMounted,ref } from "vue"; // import function ref มาจาก v
+import { useRouter } from "vue-router";
+import { useAuthStore } from "@/store/authStore";
+import axios from "axios";
+axios.defaults.withCredentials = true;
 
-    const loginName=ref(null)
-    const password=ref(null)
-    const login=ref(null)
-    const message=ref(null)
-    const route = useRouter()
-    const handleSubmit =async()=>{
-        let members={ // กำหนดค่า
-           loginName:loginName.value, //ค่าที่ส่งให้ Backend
-           password:password.value //ค่าที่ส่งให้ Backend
-        }
-        try { // Request POST Method
-          const response = await axios.post(`http://localhost:3000/members/login`,members)
-          console.log(response.data)
-          login.value=response.data.login
-          message.value=response.data.message
-          if(login.value){
-            route.push('/pagemember')
-          }
-        }
-        catch(err){
-          console.log(err)
-        }
+
+const authStore = useAuthStore();
+const router = useRouter();
+const loginName = ref(null);
+const password = ref(null);
+const login = ref(null);
+const message = ref(null);
+
+
+onMounted(async ()=>{
+    await getMember()
+    // ถ้าlogin เป็น true ก็ย้ายหน้า
+    if (login.value) {
+      router.push("/pagemember");
     }
+})
+const getMember=async ()=>{
+    await axios.get(`http://localhost:3000/members/details`)
+        .then((res)=>{
+            login.value=res.data.login
+        })
+        .catch(err=>console.log(err.message)) //ถ้าผิดพลาดแสดง err
+}
+const handleSubmit = async () => {
+  let members = {
+    // กำหนดค่า
+    loginName: loginName.value, //ค่าที่ส่งให้ Backend
+    password: password.value, //ค่าที่ส่งให้ Backend
+  };
+  try {
+    // Request POST Method
+    const response = await axios.post(
+      `http://localhost:3000/members/login`,
+      members
+    );
+    console.log(response.data);
+    login.value = response.data.login;
+    message.value = response.data.message;
+    if (login.value) {
+      authStore.login();
+      router.push("/pagemember");
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 
 </script>
 
