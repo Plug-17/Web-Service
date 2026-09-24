@@ -6,6 +6,7 @@ import bodyParser from "body-parser"
 import productRoute from "./route/productRoute.js"
 import memberRoute from "./route/memberRoute.js"
 import cookieParser from "cookie-parser"
+import cartRoute from "./route/cartRoute.js"
 dotenv.config()
 
 const app = express()
@@ -24,6 +25,7 @@ app.use("/img_pd",express.static("img_pd"))
 
 app.use(productRoute)
 app.use(memberRoute)
+app.use(cartRoute)
 
 app.get("/", (req, res) => {
     console.log("GET it requested")

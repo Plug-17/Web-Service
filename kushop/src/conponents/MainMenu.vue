@@ -17,11 +17,21 @@
           <li class="nav-item">
            <router-link to="/product" ><div class="nav-link">Product</div></router-link>
           </li>
+           <li class="nav-item " v-if="login">
+                        <router-link to="/cartlist" style="text-decoration: none;">
+                            <div class="nav-link fw-bold">Cart</div>
+                        </router-link>
+                    </li>
+             <li class="nav-item  pe-3"  v-if="login">
+            <CartInfo />
+          </li>
            <li class="nav-item" v-if="login">
             <router-link to="/pagemember" style="text-decoration: none">
               <div class="nav-link fw-bold">{{ memName }}</div>
             </router-link>
           </li>
+         
+
           <li class="nav-item" v-if="login">
             <a href="#" @click="memLogout()" style="text-decoration: none">
               <div class="nav-link fw-bold">ลงชื่อออก</div>
@@ -33,7 +43,8 @@
             </router-link>
           </li>
 
-          
+         
+
           
         </ul>
       </div>
@@ -45,7 +56,7 @@ import { onMounted, ref, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
 import { useAuthStore } from "@/store/authStore";
-
+import CartInfo from './CartInfo.vue';
 axios.defaults.withCredentials = true;
 
 const authStore = useAuthStore();
@@ -73,7 +84,7 @@ onMounted(async () => {
 const getMember = async () => {
   try {
     const res = await axios.get(
-      "http://localhost:3000/members/details"
+      "http://localhost:3000/members/detalis"
     );
 
     member.value = res.data;

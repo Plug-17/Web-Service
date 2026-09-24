@@ -54,13 +54,17 @@
                         {{ pd.pdPrice }}
                     </p>
 
-                    <a href="#" class="btn btn-primary">
-                        Go somewhere
-                    </a>
+                    <router-link :to="{name:'ProductShow',params:{pdId:pd.pdId} }"
+                        style="text-decoration: none;">
+                      <div  class="btn btn-primary">ดูรายละเอียด</div>
+               </router-link>
+
                 </div>
             </div>
         </div>
     </div>
+
+    
 
 </template>
 

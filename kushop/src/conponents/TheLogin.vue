@@ -72,7 +72,7 @@ onMounted(async ()=>{
     }
 })
 const getMember=async ()=>{
-    await axios.get(`http://localhost:3000/members/details`)
+    await axios.get(`http://localhost:3000/members/detalis`)
         .then((res)=>{
             login.value=res.data.login
         })

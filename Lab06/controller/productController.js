@@ -1,6 +1,8 @@
 import database from "../services/database.js";
 
 
+
+
 export async function getAllProduct(req, res) {
     console.log(`GET all product requested`)
 
