@@ -1,6 +1,46 @@
 import database from '../services/database.js'
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
+import multer from "multer"
+
+
+// upload part
+// 1. การกำหนดค่า storage (พื้นที่จัดเก็บไฟล์)
+const storage = multer.diskStorage({
+    // destination: กำหนดโฟลเดอร์ปลายทางที่จะเก็บไฟล์
+    destination: function (req, file, cb) {
+        // cb = callback function
+        // cb(null, 'img_mem') หมายถึง: ไม่มี error (null) และให้เก็บไฟล์ในโฟลเดอร์ 'img_mem'
+        cb(null, 'img_mem')
+    },
+   
+    // filename: กำหนดชื่อไฟล์ที่จะบันทึก
+    filename: function (req, file, cb) {
+        // req.body.memEmail คือการดึงค่า email จาก form data ที่ส่งมา
+        // ตัวอย่าง: ถ้า memEmail = "test@gmail.com" ไฟล์จะถูกบันทึกเป็น "test@gmail.com.jpg"
+        const filename = `${req.body.memEmail}.jpg`
+        // กำหนดชื่อไฟล์ผ่าน callback
+        cb(null, filename)
+    }
+})
+
+
+// 2. การกำหนดค่า uploader
+const upload = multer({
+    storage: storage,  // ใช้ storage configuration ที่กำหนดไว้
+}).single('file');    
+// single('file') หมายถึงรับอัปโหลดไฟล์เดียว และ field name ใน form ต้องชื่อ 'file'
+
+//3.Method ที่ให้ Frontend เรียกใช้
+export async function uploadMember(req, res) {
+   console.log("Upload Member Image")
+    upload(req, res, (err) => {
+        if (err) {
+            return res.status(400).json({ message: err.message });
+        }
+        res.status(200).json({ message: 'File uploaded successfully!' });
+    });
+}
 
 
 export async function logoutMember(req,res) {

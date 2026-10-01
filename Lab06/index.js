@@ -14,14 +14,19 @@ const app = express()
 const port = process.env.PORT
 
 app.use(cors({
-    origin:['http://localhost:5173','http://127.0.0.1:5173'], //Domain ของ Frontend
-    methods:['GET','POST','PUT','DELETE'], //Method ที่อนุญาต
-    credentials:true  //ให้ส่งข้อมูล Header+Cookie ได้
+    origin:['http://localhost', 'http://127.0.0.1',
+            'http://localhost:5173','http://127.0.0.1:5173',
+            'http://localhost:4173','http://127.0.0.1:4173',
+             'http://localhost:4173','http://127.0.0.1:4173'],
+    methods:['GET','POST','PUT','DELETE'],
+    credentials:true
 }))
+
 
 app.use(bodyParser.json())
 app.use(cookieParser())
 app.use("/img_pd",express.static("img_pd"))
+app.use("/img_mem",express.static("img_mem"))
 
 app.use(productRoute)
 app.use(memberRoute)

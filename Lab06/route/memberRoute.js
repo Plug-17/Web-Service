@@ -8,6 +8,6 @@ route.post("/members",memberC.postMember)
 route.get("/members/logout",memberC.logoutMember)
 route.post("/members/login",memberC.loginMember)
 route.get("/members/detalis",memberC.getMember)
-
+route.post('/members/uploadimg',memberC.uploadMember)
 
 export default route
