@@ -17,3 +17,4 @@ export const useCartStore = defineStore( 'cart',()=>{
     // ส่งออกState และ Action เพื่อให้ Component อื่นใช้งาน
     return {theQty,cartId,updateQty,setId}
 })
+
